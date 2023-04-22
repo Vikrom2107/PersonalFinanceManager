@@ -6,15 +6,25 @@ import org.json.simple.parser.JSONParser;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
 
 public class Main {
     public static void main(String[] args) {
         MaxCategories max = new MaxCategories();
-        HashMap<String, CategoryProducts> categories = loadCategories(new File("categories.tsv"));
-        categories.put("другое", new CategoryProducts("другое"));
-        categories.get("другое").setOneProduct("машина");
+        HashMap<String, CategoryProducts> categories;
+        File dataBIN = new File("data.bin");
+        if (dataBIN.exists()) {
+            categories = SaveData.loadDataBIN(dataBIN);
+        } else {
+            categories = loadCategories(new File("categories.tsv"));
+            categories.put("другое", new CategoryProducts("другое"));
+            categories.get("другое").setOneProduct("машина");
+        }
+        for (Map.Entry<String, CategoryProducts> entry : categories.entrySet()) {
+            System.out.println("Категория: " + entry.getValue().toString());
+        }
 
         try (ServerSocket serverSocket = new ServerSocket(8989);) {
             while (true) {
@@ -30,6 +40,7 @@ public class Main {
                     JSONObject product = (JSONObject) parser.parse(name);
                     out.println(max.readRequest(product, categories).toJSONString());
 //                    saveCategories(new File("categ1.tsv"), categories);
+                    SaveData.saveDataBIN(dataBIN,categories);
                 }
             }
         } catch (Exception e) {

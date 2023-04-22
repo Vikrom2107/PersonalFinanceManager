@@ -1,5 +1,7 @@
 package ru.netology;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class CategoryProducts {
@@ -27,8 +29,7 @@ public class CategoryProducts {
         this.products.add(product);
     }
     public void setOneSumDate(int sum, GregorianCalendar cal) {
-        int i = sumDate.lastKey() + sum;
-        sumDate.put(i, cal);
+        sumDate.put(sum, cal);
     }
     public void setName(String name) {
         this.name = name;
@@ -43,6 +44,8 @@ public class CategoryProducts {
     }
 
     public String toString() {
-        return name + " " + products + " " + sumDate.lastKey();
+        DateFormat df = new SimpleDateFormat("yyyy.MM.dd");
+        Date today = sumDate.get(sumDate.lastKey()).getTime();
+        return name + " " + products + " " + sumDate.lastKey() + " " + df.format(today);
     }
 }
