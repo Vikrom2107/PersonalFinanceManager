@@ -16,9 +16,9 @@ public class TestRequest {
              BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()))
         ) {
             JSONObject product = new JSONObject();
-            product.put("title", "булка");
+            product.put("title", "стол");
             product.put("date", "2022.02.08");
-            product.put("sum", 1000);
+            product.put("sum", 2000);
 //            System.out.println(product.toJSONString());
             out.println(product.toJSONString());
             String answer = in.readLine();

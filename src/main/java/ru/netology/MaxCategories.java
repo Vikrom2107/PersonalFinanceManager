@@ -18,14 +18,16 @@ public class MaxCategories {
 
             for (Map.Entry<String, CategoryProducts> entry : categoryProducts.entrySet()) {
                 if (entry.getValue().getProducts().contains((String) product.get("title"))) {
-                    entry.getValue().setOneSumDate(sum, calendar);
+                    int result = entry.getValue().getSumDate().lastKey() + sum;
+                    entry.getValue().setOneSumDate(result, calendar);
                     findProduct = true;
                     category = entry.getKey();
                 }
             }
             if (!findProduct) {
                 categoryProducts.get("другое").setOneProduct((String) product.get("title"));
-                categoryProducts.get("другое").setOneSumDate(sum,calendar);
+                int result = categoryProducts.get("другое").getSumDate().lastKey() + sum;
+                categoryProducts.get("другое").setOneSumDate(result,calendar);
                 category = "другое";
             }
         } catch (Exception ex) {
