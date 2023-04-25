@@ -1,24 +1,24 @@
 package ru.netology;
 
-import org.json.simple.JSONObject;
+import com.google.gson.JsonObject;
 
 import java.util.*;
 
 public class MaxCategories {
-    public JSONObject readRequest(JSONObject product, HashMap<String,CategoryProducts> categoryProducts) {
+    public JsonObject readRequest(JsonObject product, HashMap<String,CategoryProducts> categoryProducts) {
         String category = null;
         boolean findProduct = false;
         GregorianCalendar calendar = null;
         try {
-            int sum = Integer.parseInt(product.get("sum").toString());
-            String[] date = product.get("date").toString().split("\\.");
+            int sum = product.get("sum").getAsInt();
+            String[] date = product.get("date").getAsString().split("\\.");
             int year = Integer.parseInt(date[0]);
             int month = Integer.parseInt(date[1]) - 1;
             int day = Integer.parseInt(date[2]);
             calendar = new GregorianCalendar(year,month,day);
 
             for (Map.Entry<String, CategoryProducts> entry : categoryProducts.entrySet()) {
-                if (entry.getValue().getProducts().contains((String) product.get("title"))) {
+                if (entry.getValue().getProducts().contains(product.get("title").getAsString())) {
                     int result = entry.getValue().getSumDate().lastKey() + sum;
                     entry.getValue().setOneSumDate(result, calendar);
                     findProduct = true;
@@ -26,7 +26,7 @@ public class MaxCategories {
                 }
             }
             if (!findProduct) {
-                categoryProducts.get("другое").setOneProduct((String) product.get("title"));
+                categoryProducts.get("другое").setOneProduct(product.get("title").getAsString());
                 int result = categoryProducts.get("другое").getSumDate().lastKey() + sum;
                 categoryProducts.get("другое").setOneSumDate(result,calendar);
                 category = "другое";
@@ -34,20 +34,20 @@ public class MaxCategories {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        JSONObject answer = new JSONObject();
-        JSONObject maxCategories = new JSONObject();
-        maxCategories.put("category", category);
-        maxCategories.put("sum", categoryProducts.get(category).getSumDate().lastKey());
-        answer.put("maxCategories", maxCategories);
+        JsonObject answer = new JsonObject();
+        JsonObject maxCategories = new JsonObject();
+        maxCategories.addProperty("category", category);
+        maxCategories.addProperty("sum", categoryProducts.get(category).getSumDate().lastKey());
+        answer.add("maxCategories", maxCategories);
 
         // Добавляем maxCategories для года, месяца и дня
-        answer.put("maxYearCategory", getMaxYearCategory(categoryProducts, calendar));
-        answer.put("maxMonthCategory", getMaxMonthCategory(categoryProducts, calendar));
-        answer.put("getMaxDayCategory", getMaxDayCategory(categoryProducts, calendar));
+        answer.add("maxYearCategory", getMaxYearCategory(categoryProducts, calendar));
+        answer.add("maxMonthCategory", getMaxMonthCategory(categoryProducts, calendar));
+        answer.add("getMaxDayCategory", getMaxDayCategory(categoryProducts, calendar));
 
         return answer;
     }
-    public JSONObject getMaxYearCategory (HashMap<String,CategoryProducts> categoryProducts,
+    public JsonObject getMaxYearCategory (HashMap<String,CategoryProducts> categoryProducts,
                                           GregorianCalendar calendar) {
         int maxSum = 0;
         String nameCateg = null;
@@ -65,12 +65,12 @@ public class MaxCategories {
                 }
             }
         }
-        JSONObject maxYearCategory = new JSONObject();
-        maxYearCategory.put("category", nameCateg);
-        maxYearCategory.put("sum", maxSum);
+        JsonObject maxYearCategory = new JsonObject();
+        maxYearCategory.addProperty("category", nameCateg);
+        maxYearCategory.addProperty("sum", maxSum);
         return maxYearCategory;
     }
-    public JSONObject getMaxMonthCategory (HashMap<String,CategoryProducts> categoryProducts,
+    public JsonObject getMaxMonthCategory (HashMap<String,CategoryProducts> categoryProducts,
                                           GregorianCalendar calendar) {
         int maxSum = 0;
         String nameCateg = null;
@@ -88,12 +88,12 @@ public class MaxCategories {
                 }
             }
         }
-        JSONObject maxMonthCategory = new JSONObject();
-        maxMonthCategory.put("category", nameCateg);
-        maxMonthCategory.put("sum", maxSum);
+        JsonObject maxMonthCategory = new JsonObject();
+        maxMonthCategory.addProperty("category", nameCateg);
+        maxMonthCategory.addProperty("sum", maxSum);
         return maxMonthCategory;
     }
-    public JSONObject getMaxDayCategory (HashMap<String,CategoryProducts> categoryProducts,
+    public JsonObject getMaxDayCategory (HashMap<String,CategoryProducts> categoryProducts,
                                            GregorianCalendar calendar) {
         int maxSum = 0;
         String nameCateg = null;
@@ -111,9 +111,9 @@ public class MaxCategories {
                 }
             }
         }
-        JSONObject maxDayCategory = new JSONObject();
-        maxDayCategory.put("category", nameCateg);
-        maxDayCategory.put("sum", maxSum);
+        JsonObject maxDayCategory = new JsonObject();
+        maxDayCategory.addProperty("category", nameCateg);
+        maxDayCategory.addProperty("sum", maxSum);
         return maxDayCategory;
     }
 }

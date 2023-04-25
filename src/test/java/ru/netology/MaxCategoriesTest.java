@@ -1,13 +1,10 @@
 package ru.netology;
 
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
+import com.google.gson.JsonObject;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class MaxCategoriesTest {
     MaxCategories max = new MaxCategories();
@@ -18,21 +15,21 @@ class MaxCategoriesTest {
         categoryProducts.put("еда", new CategoryProducts("еда"));
         categoryProducts.get("еда").setOneProduct("булка");
 
-        JSONObject product = new JSONObject();
-        product.put("title", "молоко");
-        product.put("date", "2022.02.08");
-        product.put("sum", 1000);
+        JsonObject product = new JsonObject();
+        product.addProperty("title", "молоко");
+        product.addProperty("date", "2022.02.08");
+        product.addProperty("sum", 1000);
 
         String expect = "молоко";
-        Assertions.assertEquals(expect, product.get("title").toString());
+        Assertions.assertEquals(expect, product.get("title").getAsString());
 
         String[] expect2 = {"2022","02","08"};
-        String[] date = product.get("date").toString().split("\\.");
+        String[] date = product.get("date").getAsString().split("\\.");
         Assertions.assertArrayEquals(expect2,date);
 
         String expect3 = "другое";
-        JSONObject answer = max.readRequest(product, categoryProducts);
-        JSONObject maxCategory = (JSONObject) answer.get("maxCategories");
-        Assertions.assertEquals(expect3,maxCategory.get("category"));
+        JsonObject answer = max.readRequest(product, categoryProducts);
+        JsonObject maxCategory = (JsonObject) answer.get("maxCategories");
+        Assertions.assertEquals(expect3,maxCategory.get("category").getAsString());
     }
 }

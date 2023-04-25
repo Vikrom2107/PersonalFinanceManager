@@ -1,7 +1,8 @@
 package ru.netology;
 
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -31,13 +32,18 @@ public class Main {
                         Socket socket = serverSocket.accept();
                         BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                         PrintWriter out = new PrintWriter(socket.getOutputStream());
+                        FileWriter file = new FileWriter(new File("answer.json"))
                 ) {
                     // обработка одного подключения
                     final String name = in.readLine();
+                    GsonBuilder builder = new GsonBuilder();
+                    Gson gson = builder.create();
                     System.out.println(name);
-                    JSONParser parser = new JSONParser();
-                    JSONObject product = (JSONObject) parser.parse(name);
-                    out.println(max.readRequest(product, categories).toJSONString());
+                    JsonObject product = gson.fromJson(name, JsonObject.class);
+                    JsonObject answer = (max.readRequest(product, categories));
+                    out.println(gson.toJson(answer));
+//                    file.write(gson.toJson(answer));
+//                    file.flush();
 //                    saveCategories(new File("categ1.tsv"), categories);
                     SaveData.saveDataBIN(dataBIN,categories);
                 }
