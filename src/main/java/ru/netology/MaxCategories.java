@@ -43,7 +43,7 @@ public class MaxCategories {
         // Добавляем maxCategories для года, месяца и дня
         answer.add("maxYearCategory", getMaxYearCategory(categoryProducts, calendar));
         answer.add("maxMonthCategory", getMaxMonthCategory(categoryProducts, calendar));
-        answer.add("getMaxDayCategory", getMaxDayCategory(categoryProducts, calendar));
+        answer.add("maxDayCategory", getMaxDayCategory(categoryProducts, calendar));
 
         return answer;
     }
